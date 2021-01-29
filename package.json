@@ -13,7 +13,7 @@
     "clean:docker": "rm -rf ./node_modules && rm yarn.lock && rm -rf ./dist",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "before-build": "npm run clean && yarn && npm run lint && npm run type-check",
+    "before-build": " babel src --out-dir dist --extensions \".ts\",\".js\"",
     "build:ts": "npm run before-build && tsc -p .",
     "build:babel": "npm run before-build && babel src --out-dir dist --extensions \".ts\",\".js\"",
     "build:docker": "npm run clean:docker && npm run before-build && npm run build:babel",
