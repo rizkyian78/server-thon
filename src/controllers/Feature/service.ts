@@ -2,12 +2,12 @@
 /* eslint-disable prefer-const */
 import { Request } from 'express'
 import models, { FilterQueryAttributes } from 'models'
-import { filterQueryObject } from 'helpers/Common'
+import { filterQueryObject, validateBoolean } from 'helpers/Common'
 import ResponseError from 'modules/Response/ResponseError'
-import useValidation from 'helpers/useValidation'
-import { CategoryAttributes } from 'models/Category'
+import { FeatureAttributes } from 'models/Feature'
+import { isString } from 'lodash'
 
-const { Category } = models
+const { Feature } = models
 
 class CategoryService {
   /**
@@ -25,12 +25,12 @@ class CategoryService {
     if (!pageSize) pageSize = 999
     const filterObject = filtered ? filterQueryObject(JSON.parse(filtered)) : {}
 
-    const data = await Category.find(filterObject)
+    const data = await Feature.find(filterObject)
       .limit(Number(pageSize))
       .skip(Number(pageSize) * Number(page))
       .sort({ createdAt: 'desc' })
 
-    const total = await Category.countDocuments(filterObject)
+    const total = await Feature.countDocuments(filterObject)
 
     return { message: `${total} data has been received.`, data, total }
   }
@@ -40,11 +40,11 @@ class CategoryService {
    * @param id
    */
   public static async getOne(id: string) {
-    const data = await Category.findById(id)
+    const data = await Feature.findById(id)
 
     if (!data) {
       throw new ResponseError.NotFound(
-        'Category data not found or has been deleted'
+        'Feature data not found or has been deleted'
       )
     }
 
@@ -55,9 +55,18 @@ class CategoryService {
    *
    * @param formData
    */
-  public static async create(formData: CategoryAttributes) {
+  public static async create(formData: FeatureAttributes) {
     // const value = useValidation(schema.create, formData)
-    const data = await Category.create({ name: formData.name })
+    if (isString(formData.imageUrl)) {
+      formData.imageUrl = false
+    }
+    console.log(formData)
+    const data = await Feature.create({
+      ...formData,
+      imageUrl: formData.imageUrl
+        ? formData.imageUrl.path.replace('public', '')
+        : null,
+    })
 
     return data
   }
@@ -67,7 +76,7 @@ class CategoryService {
    * @param id
    * @param formData
    */
-  public static async update(id: string, formData: CategoryAttributes) {
+  public static async update(id: string, formData: FeatureAttributes) {
     const data = await this.getOne(id)
 
     // const value = useValidation(schema.create, {
@@ -85,7 +94,7 @@ class CategoryService {
    * @param id
    */
   public static async delete(id: string) {
-    await Category.findByIdAndRemove(id)
+    await Feature.findByIdAndRemove(id)
   }
 }
 

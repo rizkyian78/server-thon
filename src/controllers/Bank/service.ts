@@ -29,7 +29,7 @@ class CategoryService {
     }: FilterQueryAttributes = req.getQuery()
 
     if (!page) page = 0
-    if (!pageSize) pageSize = 10
+    if (!pageSize) pageSize = 999
     const filterObject = filtered ? filterQueryObject(JSON.parse(filtered)) : {}
 
     const data = await Bank.find(filterObject)
@@ -64,6 +64,7 @@ class CategoryService {
    */
   public static async create(formData: IBankAttributes) {
     // const value = useValidation(schema.create, formData)
+    console.log(formData.image)
     const data = await Bank.create({
       ...formData,
       imageUrl: formData.image.path.replace('public', ''),
@@ -77,7 +78,7 @@ class CategoryService {
    * @param id
    * @param formData
    */
-  public static async update(id: string, formData: BankAttributes) {
+  public static async update(id: string, formData: IBankAttributes) {
     const data = await this.getOne(id)
 
     // const value = useValidation(schema.create, {
@@ -85,7 +86,10 @@ class CategoryService {
     //   ...formData,
     // })
 
-    await data.updateOne(formData || {})
+    await data.updateOne({
+      ...formData,
+      imageUrl: formData.image.path.replace('public', ''),
+    })
 
     return data
   }

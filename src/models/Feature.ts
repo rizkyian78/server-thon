@@ -3,7 +3,9 @@ import { Schema, model, Document } from 'mongoose'
 export interface FeatureAttributes {
   name: string
   qty: number
-  imageUrl: string
+  imageUrl: {
+    path: string
+  }
   createdAt?: Date
   updatedAt?: Date
 }

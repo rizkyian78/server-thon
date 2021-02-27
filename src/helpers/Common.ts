@@ -81,7 +81,13 @@ function validateBoolean(value: string | boolean | Number) {
     return true
   }
 
-  if (value === 'false' || value === 0 || value === '0' || value === false) {
+  if (
+    value === 'false' ||
+    value === 0 ||
+    value === '0' ||
+    value === false ||
+    value === 'undefined'
+  ) {
     return false
   }
 

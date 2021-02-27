@@ -18,7 +18,11 @@ const ConfigMulter = multer({
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname)
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
-      return cb(new Error('Hanya .png .jpg .jpeg yang dapat diterima'))
+      return cb(
+        new ResponseError.BadRequest(
+          'Hanya .png .jpg .jpeg yang dapat diterima'
+        )
+      )
     }
     cb(null, true)
   },

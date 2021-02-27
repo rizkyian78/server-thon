@@ -5,6 +5,7 @@ export interface ActivityAttributes {
   type: string
   imageUrl: string
   isPopular: boolean
+  itemId: string
   createdAt?: Date
   updatedAt?: Date
 }
@@ -17,6 +18,7 @@ const ActivitySchema = new Schema(
     type: { type: String, required: true },
     imageUrl: { type: String, required: true },
     isPopular: { type: Boolean, required: true },
+    itemId: { type: Schema.Types.ObjectId, required: true, ref: 'Item' },
   },
   { timestamps: true }
 )

@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose'
+import { Schema, model, Document, Types } from 'mongoose'
 
 export interface ItemAttributes {
   title: string
@@ -7,9 +7,10 @@ export interface ItemAttributes {
   city: string
   isPopular: boolean
   description: string
-  imageId: any
-  featureId: any
-  activityId: any
+  categoryId: string
+  images: Types.ObjectId[]
+  featureId: []
+  activityId: []
   createdAt?: Date
   updatedAt?: Date
 }
@@ -20,16 +21,22 @@ const ItemSchema = new Schema(
   {
     title: { type: String, required: true },
     price: { type: Number, required: true },
-    country: { type: String, required: true },
-    city: { type: String, required: true, default: 'Indonesia' },
+    country: { type: String, required: true, default: 'Indonesia' },
+    city: { type: String, required: true },
     isPopular: { type: Boolean, required: true, default: false },
     description: { type: String, required: true },
-    imageId: { type: Schema.Types.ObjectId, required: true, ref: 'Images' },
-    featureId: { type: Schema.Types.ObjectId, required: true, ref: 'Features' },
-    activityId: {
+    images: [{ type: Schema.Types.ObjectId, required: true, ref: 'Images' }],
+    featureId: [{ type: Schema.Types.ObjectId, ref: 'Features' }],
+    activityId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Activities',
+      },
+    ],
+    categoryId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Activities',
+      ref: 'Category',
     },
   },
   { timestamps: true }

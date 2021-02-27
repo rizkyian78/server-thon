@@ -8,7 +8,10 @@ const { APP_NAME, PORT, NODE_ENV } = process.env
 const baseRoutes = _path.resolve('./docs/swagger/routes')
 // const baseSchemas = _path.resolve('./docs/swagger/schemas')
 
-const getPathRoutes = (path) => `${baseRoutes}${path}`
+const getPathRoutes = (path) => {
+  return `${baseRoutes}${path}`
+}
+
 // const getPathSchemes = (path) => `${baseSchemas}${path}`
 
 const getDocs = (basePath, getPath) => {

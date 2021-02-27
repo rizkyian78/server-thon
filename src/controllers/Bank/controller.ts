@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import asyncHandler from 'helpers/asyncHandler'
 import routes from 'routes/public'
-import Authorization from 'middlewares/Authorization'
 import BuildResponse from 'modules/Response/BuildResponse'
 import multer from 'modules/ConfigMulter'
 import { MulterError } from 'multer'
@@ -13,9 +12,11 @@ function upload(req: Request, res: Response, next: NextFunction) {
     if (err instanceof MulterError) {
       res
         .status(400)
-        .json({ message: 'Mohon Upload File Yang Kurang Dari 2mb' })
+        .json({ message: 'Mohon Untuk upload file yang kurang dari 2mb' })
     } else if (err) {
-      res.status(400).json({ message: err.message })
+      res
+        .status(400)
+        .json({ message: 'Hanya .png .jpg .jpeg yang dapat diterima' })
     }
     next()
   })
@@ -60,7 +61,6 @@ routes.post(
   setFileToBody,
   asyncHandler(async function createData(req: Request, res: Response) {
     const formData = req.getBody()
-    console.log(formData)
     const data = await CategoryService.create(formData)
     const buildResponse = BuildResponse.created({ data })
 
@@ -71,6 +71,8 @@ routes.post(
 routes.put(
   '/bank/:id',
   //   Authorization,
+  upload,
+  setFileToBody,
   asyncHandler(async function updateData(req: Request, res: Response) {
     const { id } = req.getParams()
     const formData = req.getBody()
