@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable global-require */
 import fs from 'fs'
 import path from 'path'
 import initialMongoDB from 'config/database'
@@ -19,6 +20,7 @@ if (!fs.existsSync(pathEnv)) {
 require('@babel/register')({ extensions: ['.js', '.ts'] })
 const http = require('http')
 const debug = require('debug')('boilerplate-express-typescript:server')
+
 const app = require('../app')
 
 /**
@@ -101,5 +103,16 @@ function onListening() {
  */
 
 server.listen(port)
+// eslint-disable-next-line import/order
+export const io = require('socket.io')(server, {
+  serveClient: true,
+  secure: true,
+  pingTimeout: 300,
+  path: '/socket',
+  cors: {
+    origin: '*',
+  },
+})
+
 server.on('error', onError)
 server.on('listening', onListening)

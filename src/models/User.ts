@@ -52,9 +52,9 @@ const UserSchema = new Schema(
     email: { type: String, required: true },
     password: { type: String, required: true },
     phone: { type: String, required: true },
-    active: { type: Boolean, default: false, required: true },
-    tokenVerify: { type: String, required: true },
-    Role: { type: Schema.Types.ObjectId, required: true, ref: 'Roles' },
+    active: { type: Boolean, default: true, required: true },
+    tokenVerify: { type: String, required: false },
+    Role: { type: Schema.Types.ObjectId, required: false, ref: 'Roles' },
   },
   { timestamps: true }
 )

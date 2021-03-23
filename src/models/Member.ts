@@ -1,26 +1,25 @@
 import { Schema, model, Document } from 'mongoose'
 
-export interface ActivityAttributes {
-  name: string
-  type: string
-  imageUrl: string
-  isPopular: boolean
+export interface MemberAttributes {
+  firstName: string
+  lastName: string
+  email: string
+  phoneNumber: string
   createdAt?: Date
   updatedAt?: Date
 }
+interface MemberCreationAttributes extends MemberAttributes, Document {}
 
-interface ActivityCreationAttributes extends ActivityAttributes, Document {}
-
-const ActivitySchema = new Schema(
+const MemberSchema = new Schema(
   {
-    name: { type: String, required: true },
-    type: { type: String, required: true },
-    imageUrl: { type: String, required: true },
-    isPopular: { type: Boolean, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
   },
   { timestamps: true }
 )
 
-const Activity = model<ActivityCreationAttributes>('Activities', ActivitySchema)
+const Member = model<MemberCreationAttributes>('Member', MemberSchema)
 
-export default Activity
+export default Member

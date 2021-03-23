@@ -31,7 +31,7 @@ routes.get(
 
 routes.post(
   '/user',
-  Authorization,
+  // Authorization,
   asyncHandler(async function createData(req: Request, res: Response) {
     const formData = req.getBody()
 

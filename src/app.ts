@@ -2,6 +2,7 @@ import createError from 'http-errors'
 import express, { Request, Response, NextFunction } from 'express'
 import path from 'path'
 import cors from 'cors'
+import { io } from 'bin/server'
 import helmet from 'helmet'
 import logger from 'morgan'
 import bodyParser from 'body-parser'
@@ -33,6 +34,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(`${__dirname}/../`, 'public')))
 
 app.use((req: Request, res, next) => {
+  req.io = io
   new withState(req)
   next()
 })

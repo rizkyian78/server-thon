@@ -8,6 +8,8 @@ import Booking from './Booking'
 import Feature from './Feature'
 import Image from './Image'
 import Item from './Item'
+import Chat from './Chat'
+import Member from './Member'
 
 export interface FilterAttributes {
   id: string
@@ -27,6 +29,7 @@ export interface FilterQueryAttributes {
 }
 
 export default {
+  Member,
   Role,
   User,
   RefreshToken,
@@ -37,4 +40,5 @@ export default {
   Feature,
   Image,
   Item,
+  Chat,
 }

@@ -3,7 +3,7 @@ import * as yup from 'yup'
 const create = yup
   .object()
   .shape({
-    fullName: yup.string().required('Nama Lengkap wajib diisi'),
+    firstName: yup.string().required('Nama Lengkap wajib diisi'),
     email: yup
       .string()
       .email('Email tidak valid')
@@ -20,7 +20,7 @@ const create = yup
       .string()
       .min(8, 'Minimal 8 karakter')
       .oneOf([yup.ref('newPassword')], 'Password tidak sama'),
-    Role: yup.string().required('Role wajib diisi'),
+    // Role: yup.string().required('Role wajib diisi'),
   })
   .required()
 
