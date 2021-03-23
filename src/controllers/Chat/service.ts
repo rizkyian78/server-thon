@@ -6,6 +6,7 @@ import { filterQueryObject } from 'helpers/Common'
 import ResponseError from 'modules/Response/ResponseError'
 import useValidation from 'helpers/useValidation'
 import { ChatAttributes } from 'models/Chat'
+import { Socket } from 'socket.io'
 
 const { Chat } = models
 
@@ -55,11 +56,11 @@ class CategoryService {
    *
    * @param formData
    */
-  public static async create(req: Request, formData: ChatAttributes) {
+  public static async create(socket: Socket, formData: ChatAttributes) {
     // const value = useValidation(schema.create, formData)
 
     const data = await Chat.create({ body: formData.body })
-    req.io.sockets.emit('message', {
+    socket.emit('message', {
       body: formData.body,
     })
     return data

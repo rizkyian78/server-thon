@@ -5,6 +5,7 @@ import routes from 'routes/public'
 import EmailProvider from 'config/email'
 import Authorization from 'middlewares/Authorization'
 import BuildResponse from 'modules/Response/BuildResponse'
+import { io } from 'bin/server'
 import CategoryService from './service'
 
 routes.get(
@@ -36,7 +37,7 @@ routes.post(
   asyncHandler(async function createData(req: Request, res: Response) {
     const formData = req.getBody()
 
-    const data = await CategoryService.create(req, formData)
+    const data = await CategoryService.create(io, formData)
     const buildResponse = BuildResponse.created({ data })
 
     return res.status(201).json(buildResponse)
