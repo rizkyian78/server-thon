@@ -72,7 +72,7 @@ class UserService {
     const value = useValidation(schema.create, newFormData)
     const data = await User.create(value)
 
-    return data
+    return 'user created'
   }
 
   /**

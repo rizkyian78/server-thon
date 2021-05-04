@@ -11,7 +11,7 @@ export interface UserAttributes {
   tokenVerify?: string | null
   newPassword?: string
   confirmNewPassword?: string
-  Role: string
+  Role?: string
   createdAt?: Date
   updatedAt?: Date
 }
@@ -50,7 +50,7 @@ const UserSchema = new Schema(
   {
     firstName: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     phone: { type: String, required: true },
     active: { type: Boolean, default: true, required: true },
     tokenVerify: { type: String, required: false },

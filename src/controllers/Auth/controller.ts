@@ -26,8 +26,8 @@ routes.post(
     const buildResponse = BuildResponse.get(data)
 
     return res
-      .cookie('token', data.accessToken, {
-        maxAge: Number(data.expiresIn) * 1000, // 7 Days
+      .cookie('token', data!.accessToken, {
+        maxAge: Number(data!.expiresIn) * 1000, // 7 Days
         httpOnly: true,
         path: '/v1',
         secure: process.env.NODE_ENV === 'production',

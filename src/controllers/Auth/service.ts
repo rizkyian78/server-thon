@@ -7,7 +7,6 @@ import useValidation from 'helpers/useValidation'
 import schema from 'controllers/User/schema'
 import createDirNotExist from 'utils/Directory'
 import ResponseError from 'modules/Response/ResponseError'
-import SendMail from 'helpers/SendEmail'
 import UserService from 'controllers/User/service'
 import RefreshTokenService from 'controllers/RefreshToken/service'
 
@@ -62,16 +61,9 @@ class AuthService {
       password,
     }
 
-    const value = useValidation(schema.create, newFormData)
-    const data = await User.create(value)
+    useValidation(schema.create, newFormData)
 
-    // Initial Send an e-mail
-    SendMail.AccountRegister(formData, tokenRegister)
-
-    const message =
-      'registration is successful, check your email for the next steps'
-
-    return { data, message }
+    return 'user created'
   }
 
   /**
@@ -79,76 +71,79 @@ class AuthService {
    * @param formData
    */
   public static async signIn(formData: LoginAttributes) {
-    const { email, password } = useValidation(schema.login, formData)
+    try {
+      const { email, password } = useValidation(schema.login, formData)
 
-    const userData = await User.findOne({ email }).select('-tokenVerify')
+      const userData = await User.findOne({ email }).select('-tokenVerify')
 
-    if (!userData) {
-      throw new ResponseError.NotFound('data not found or has been deleted')
-    }
-
-    /* User active proses login */
-    if (userData.active) {
-      // @ts-ignore
-      const comparePassword = await userData.comparePassword(
-        password,
-        userData.password
-      )
-
-      if (comparePassword) {
-        // modif payload token
-        const payloadToken = {
-          _id: userData._id,
-          nama: userData.firstName,
-          email: userData.email,
-          active: userData.active,
-        }
-
-        // Access Token
-        const accessToken = jwt.sign(
-          JSON.parse(JSON.stringify(payloadToken)),
-          JWT_SECRET_ACCESS_TOKEN,
-          {
-            expiresIn,
-          }
-        )
-
-        // Refresh Token
-        const refreshToken = jwt.sign(
-          JSON.parse(JSON.stringify(payloadToken)),
-          JWT_SECRET_REFRESH_TOKEN,
-          {
-            expiresIn: JWT_REFRESH_TOKEN_EXPIRED,
-          }
-        )
-
-        const formDataRefreshToken = {
-          UserId: userData._id,
-          token: refreshToken,
-        }
-
-        await RefreshTokenService.create(formDataRefreshToken)
-
-        // create directory
-        await createDirectory(userData._id)
-
-        return {
-          message: 'Login successfully',
-          accessToken,
-          expiresIn,
-          tokenType: 'Bearer',
-          refreshToken,
-          user: payloadToken,
-        }
+      if (!userData) {
+        throw new ResponseError.NotFound('data not found or has been deleted')
       }
 
-      throw new ResponseError.BadRequest('incorrect email or password!')
+      /* User active proses login */
+      if (userData.active) {
+        // @ts-ignore
+        const comparePassword = await userData.comparePassword(
+          password,
+          userData.password
+        )
+
+        if (comparePassword) {
+          // modif payload token
+          const payloadToken = {
+            _id: userData._id,
+            nama: userData.firstName,
+            email: userData.email,
+            active: userData.active,
+          }
+
+          // Access Token
+          const accessToken = jwt.sign(
+            JSON.parse(JSON.stringify(payloadToken)),
+            JWT_SECRET_ACCESS_TOKEN,
+            {
+              expiresIn,
+            }
+          )
+
+          // Refresh Token
+          const refreshToken = jwt.sign(
+            JSON.parse(JSON.stringify(payloadToken)),
+            JWT_SECRET_REFRESH_TOKEN,
+            {
+              expiresIn: JWT_REFRESH_TOKEN_EXPIRED,
+            }
+          )
+
+          const formDataRefreshToken = {
+            UserId: userData._id,
+            token: refreshToken,
+          }
+
+          await RefreshTokenService.create(formDataRefreshToken)
+
+          // create directory
+          await createDirectory(userData._id)
+
+          return {
+            message: 'Login successfully',
+            accessToken,
+            expiresIn,
+            tokenType: 'Bearer',
+            refreshToken,
+            user: payloadToken,
+          }
+        }
+
+        throw new ResponseError.BadRequest('incorrect email or password!')
+      }
+    } catch (error) {
+      throw new ResponseError.BadRequest(
+        'please check your email account to verify your email and continue the registration process.'
+      )
     }
 
     /* User not active return error confirm email */
-    throw new ResponseError.BadRequest(
-      'please check your email account to verify your email and continue the registration process.'
-    )
   }
 
   /**
