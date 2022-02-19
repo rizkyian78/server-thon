@@ -59,9 +59,9 @@ class CategoryService {
   public static async create(socket: Socket, formData: ChatAttributes) {
     // const value = useValidation(schema.create, formData)
 
-    const data = await Chat.create({ body: formData.body })
+    const data = await Chat.create({ body: formData.context })
     socket.emit('message', {
-      body: formData.body,
+      context: formData.context,
     })
     return data
   }

@@ -27,7 +27,6 @@ class UserService {
     if (!page) page = 0
     if (!pageSize) pageSize = 10
     const filterObject = filtered ? filterQueryObject(JSON.parse(filtered)) : {}
-
     const data = await User.find(filterObject)
       .populate(populates)
       .select('-password -tokenVerify')
@@ -72,7 +71,7 @@ class UserService {
     const value = useValidation(schema.create, newFormData)
     const data = await User.create(value)
 
-    return 'user created'
+    return data
   }
 
   /**

@@ -73,9 +73,7 @@ class AuthService {
   public static async signIn(formData: LoginAttributes) {
     try {
       const { email, password } = useValidation(schema.login, formData)
-
       const userData = await User.findOne({ email }).select('-tokenVerify')
-
       if (!userData) {
         throw new ResponseError.NotFound('data not found or has been deleted')
       }

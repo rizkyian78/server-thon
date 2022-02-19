@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Schema, model, Document } from 'mongoose'
 import userSchema from 'controllers/User/schema'
+import mongoosastic from 'mongoosastic'
 
 export interface UserAttributes {
   firstName: string
@@ -63,7 +64,6 @@ UserSchema.methods.comparePassword = function (
   candidatePassword: string,
   password: string
 ) {
-  console.log({ candidatePassword, password })
   return new Promise((resolve, reject) => {
     bcrypt.compare(candidatePassword, password, function (err, isMatch) {
       if (err) {
@@ -75,6 +75,7 @@ UserSchema.methods.comparePassword = function (
   })
 }
 
+UserSchema.plugin(mongoosastic)
 const User = model<UserCreationAttributes>('Users', UserSchema)
 
 export default User

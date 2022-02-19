@@ -36,7 +36,6 @@ routes.post(
   //   Authorization,
   asyncHandler(async function createData(req: Request, res: Response) {
     const formData = req.getBody()
-
     const data = await CategoryService.create(io, formData)
     const buildResponse = BuildResponse.created({ data })
 
